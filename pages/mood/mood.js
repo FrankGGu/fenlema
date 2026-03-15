@@ -41,7 +41,13 @@ Page({
     selectedRecord: null,
     
     // 推荐疗愈内容
-    recommendedContent: []
+    recommendedContent: [],
+    
+    // 情绪统计数据
+    emotionStats: [],
+    
+    // 筛选后的记录
+    filteredRecords: []
   },
 
   onLoad() {
@@ -100,8 +106,25 @@ Page({
       }
     ]
     
+    // 转换 emotionTags 为完整信息
+    const recordsWithInfo = records.map(record => {
+      const emotionTagsWithInfo = record.emotionTags.map(tagId => {
+        const tagInfo = this.data.emotionTags.find(t => t.id === tagId)
+        return tagInfo || { id: tagId, name: tagId, emoji: '❓' }
+      })
+      return {
+        ...record,
+        emotionTagsWithInfo
+      }
+    })
+    
     this.setData({
-      historyRecords: records
+      historyRecords: recordsWithInfo
+    }, () => {
+      // 更新情绪统计
+      this.updateEmotionStats()
+      // 更新筛选后的记录
+      this.updateFilteredRecords()
     })
   },
 
@@ -193,10 +216,16 @@ Page({
     }
     
     // 创建新记录
+    const emotionTagsWithInfo = moodRecord.emotionTags.map(tagId => {
+      const tagInfo = this.data.emotionTags.find(t => t.id === tagId)
+      return tagInfo || { id: tagId, name: tagId, emoji: '❓' }
+    })
+    
     const newRecord = {
       id: Date.now(),
       content: moodRecord.content,
       emotionTags: moodRecord.emotionTags,
+      emotionTagsWithInfo: emotionTagsWithInfo,
       isAnonymous: moodRecord.isAnonymous,
       createdAt: new Date().toISOString(),
       formattedDate: formatDate(new Date(), 'MM-DD HH:mm')
@@ -213,6 +242,11 @@ Page({
         isAnonymous: true
       },
       emotionTags: this.data.emotionTags.map(tag => ({ ...tag, selected: false }))
+    }, () => {
+      // 更新情绪统计
+      this.updateEmotionStats()
+      // 更新筛选后的记录
+      this.updateFilteredRecords()
     })
     
     showSuccess('情绪已记录到树洞')
@@ -227,6 +261,38 @@ Page({
     // 这里可以调用API获取更精准的推荐
     // 暂时使用模拟数据
     this.loadRecommendedContent()
+  },
+  
+  // 更新情绪统计
+  updateEmotionStats() {
+    const { historyRecords } = this.data
+    const stats = {}
+    
+    historyRecords.forEach(record => {
+      record.emotionTags.forEach(tag => {
+        if (!stats[tag]) {
+          stats[tag] = 0
+        }
+        stats[tag]++
+      })
+    })
+    
+    const emotionStats = Object.entries(stats)
+      .map(([tag, count]) => {
+        const tagInfo = this.data.emotionTags.find(t => t.id === tag)
+        return {
+          tag: tag,
+          name: tagInfo ? tagInfo.name : tag,
+          emoji: tagInfo ? tagInfo.emoji : '❓',
+          count: count,
+          percentage: Math.round((count / historyRecords.length) * 100) || 0
+        }
+      })
+      .sort((a, b) => b.count - a.count)
+    
+    this.setData({
+      emotionStats
+    })
   },
 
   // 查看记录详情
@@ -295,11 +361,14 @@ Page({
     
     this.setData({
       [`filter.${filterType}`]: filterValue
+    }, () => {
+      // 更新筛选后的记录
+      this.updateFilteredRecords()
     })
   },
 
-  // 获取筛选后的记录
-  getFilteredRecords() {
+  // 更新筛选后的记录
+  updateFilteredRecords() {
     const { historyRecords, filter } = this.data
     
     let filteredRecords = [...historyRecords]
@@ -334,36 +403,12 @@ Page({
       })
     }
     
-    return filteredRecords
+    this.setData({
+      filteredRecords
+    })
   },
 
-  // 获取情绪统计
-  getEmotionStats() {
-    const { historyRecords } = this.data
-    const stats = {}
-    
-    historyRecords.forEach(record => {
-      record.emotionTags.forEach(tag => {
-        if (!stats[tag]) {
-          stats[tag] = 0
-        }
-        stats[tag]++
-      })
-    })
-    
-    return Object.entries(stats)
-      .map(([tag, count]) => {
-        const tagInfo = this.data.emotionTags.find(t => t.id === tag)
-        return {
-          tag: tag,
-          name: tagInfo ? tagInfo.name : tag,
-          emoji: tagInfo ? tagInfo.emoji : '❓',
-          count: count,
-          percentage: Math.round((count / historyRecords.length) * 100) || 0
-        }
-      })
-      .sort((a, b) => b.count - a.count)
-  },
+
 
   // 查看疗愈内容
   viewHealingContent(e) {
@@ -399,6 +444,9 @@ Page({
         tag: 'all',
         date: 'all'
       }
+    }, () => {
+      // 更新筛选后的记录
+      this.updateFilteredRecords()
     })
   },
 

@@ -87,7 +87,6 @@
       
       <view wx:else class="checkin-prompt">
         <text>今天还未记录你们的关系状态哦～</text>
-        <button class="btn btn-primary" bindtap="goToCheckin">立即打卡</button>
       </view>
     </view>
 

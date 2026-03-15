@@ -13,12 +13,12 @@ App({
       user: {
         id: 1,
         nickname: '小明',
-        avatar: 'https://example.com/avatar.jpg'
+        avatar: '/images/ai-avatar.png'
       },
       partner: {
         id: 2,
         nickname: '小红',
-        avatar: 'https://example.com/avatar2.jpg'
+        avatar: '/images/ai-avatar.png'
       },
       relationship: {
         id: 1,
@@ -51,10 +51,18 @@ App({
     // 检查登录状态
     this.checkLoginStatus()
     
-    // 获取系统信息
-    wx.getSystemInfo({
+    // 获取设备信息（兼容 HarmonyOS）
+    wx.getDeviceInfo({
       success: res => {
-        this.globalData.systemInfo = res
+        this.globalData.deviceInfo = res
+      },
+      fail: (err) => {
+        console.warn('获取设备信息失败:', err)
+        // 降级处理
+        this.globalData.deviceInfo = {
+          platform: 'unknown',
+          system: 'unknown'
+        }
       }
     })
   },
@@ -62,15 +70,31 @@ App({
   checkLoginStatus() {
     // 模拟登录状态
     const userInfo = wx.getStorageSync('userInfo')
+
+    const normalizeAvatar = (avatar) => {
+      if (avatar && avatar.startsWith('/')) return avatar
+      return '/images/ai-avatar.png'
+    }
+
     if (userInfo) {
-      this.globalData.userInfo = userInfo
+      // 兼容旧缓存中的示例头像
+      this.globalData.userInfo = {
+        ...userInfo,
+        avatar: normalizeAvatar(userInfo.avatar)
+      }
+      wx.setStorageSync('userInfo', this.globalData.userInfo)
       // 获取关系状态
       this.fetchRelationship()
     } else {
       // 未登录，跳转到登录页（实际开发中可能需要微信授权）
-      // 这里先模拟用户信息
-      this.globalData.userInfo = this.globalData.mockData.user
+      // 这里先模拟用户信息，并初始化关系数据
+      this.globalData.userInfo = {
+        ...this.globalData.mockData.user,
+        avatar: normalizeAvatar(this.globalData.mockData.user.avatar)
+      }
       wx.setStorageSync('userInfo', this.globalData.userInfo)
+      // 初始化关系数据
+      this.fetchRelationship()
     }
   },
 
@@ -115,6 +139,11 @@ App({
 
   // 提交打卡
   submitCheckin(data) {
+    // 确保关系数据已初始化
+    if (!this.globalData.relationship) {
+      this.fetchRelationship()
+    }
+
     // 模拟提交打卡
     const checkin = {
       ...data,

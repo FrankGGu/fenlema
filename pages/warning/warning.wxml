@@ -40,19 +40,19 @@
       
       <view class="stats-grid">
         <view class="stat-item">
-          <text class="stat-value">{{warnings.length}}</text>
+          <text class="stat-value">{{warningsStats.total}}</text>
           <text class="stat-label">总预警数</text>
         </view>
         <view class="stat-item">
-          <text class="stat-value">{{warnings.filter(w => !w.handled).length}}</text>
+          <text class="stat-value">{{warningsStats.unhandled}}</text>
           <text class="stat-label">未处理</text>
         </view>
         <view class="stat-item">
-          <text class="stat-value">{{warnings.filter(w => w.level === 'high').length}}</text>
+          <text class="stat-value">{{warningsStats.highRisk}}</text>
           <text class="stat-label">高风险</text>
         </view>
         <view class="stat-item">
-          <text class="stat-value">{{warnings.filter(w => w.type === '漏打卡').length}}</text>
+          <text class="stat-value">{{warningsStats.missCheckin}}</text>
           <text class="stat-label">漏打卡</text>
         </view>
       </view>

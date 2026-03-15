@@ -79,7 +79,7 @@
       </view>
       
       <view class="emotion-stats">
-        <view wx:for="{{getEmotionStats()}}" wx:key="tag" class="stat-item">
+        <view wx:for="{{emotionStats}}" wx:key="tag" class="stat-item">
           <view class="stat-header">
             <text class="stat-emoji">{{item.emoji}}</text>
             <text class="stat-name">{{item.name}}</text>
@@ -151,14 +151,14 @@
       </view>
       
       <view class="records-list">
-        <view wx:if="{{getFilteredRecords().length === 0}}" class="no-records">
+        <view wx:if="{{filteredRecords.length === 0}}" class="no-records">
           <text class="no-data-text">暂无记录</text>
           <text class="no-data-hint">写下你的第一份心情记录吧</text>
         </view>
         
         <view wx:else class="record-items">
           <view 
-            wx:for="{{getFilteredRecords()}}" 
+            wx:for="{{filteredRecords}}" 
             wx:key="id"
             class="record-item"
             bindtap="viewRecordDetail"
@@ -168,12 +168,12 @@
               <text class="record-text">{{item.content}}</text>
               
               <view class="record-tags">
-                <view wx:for="{{item.emotionTags}}" wx:key="index" class="record-tag">
+                <view wx:for="{{item.emotionTagsWithInfo}}" wx:key="id" class="record-tag">
                   <text class="tag-emoji">
-                    {{emotionTags.find(t => t.id === item2)?.emoji || '❓'}}
+                    {{item.emoji}}
                   </text>
                   <text class="tag-name">
-                    {{emotionTags.find(t => t.id === item2)?.name || item2}}
+                    {{item.name}}
                   </text>
                 </view>
               </view>
@@ -187,7 +187,7 @@
         </view>
       </view>
       
-      <view wx:if="{{getFilteredRecords().length > 0}}" class="history-footer">
+      <view wx:if="{{filteredRecords.length > 0}}" class="history-footer">
         <text class="clear-filters" bindtap="clearFilters">清除筛选</text>
       </view>
     </view>

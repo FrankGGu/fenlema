@@ -30,6 +30,14 @@ Page({
       handled: 'all' // all, handled, unhandled
     },
     
+    // 预警统计
+    warningsStats: {
+      total: 0,
+      unhandled: 0,
+      highRisk: 0,
+      missCheckin: 0
+    },
+    
     // 加载状态
     loading: true
   },
@@ -119,7 +127,8 @@ Page({
     }))
     
     this.setData({
-      warnings: formattedWarnings
+      warnings: formattedWarnings,
+      warningsStats: this.computeWarningStats(formattedWarnings)
     })
   },
 
@@ -311,8 +320,27 @@ Page({
     }))
     
     this.setData({
-      warnings: formattedWarnings
+      warnings: formattedWarnings,
+      warningsStats: this.computeWarningStats(formattedWarnings)
     })
+  },
+
+  // 计算预警统计
+  computeWarningStats(warnings) {
+    const stats = {
+      total: warnings.length,
+      unhandled: 0,
+      highRisk: 0,
+      missCheckin: 0
+    }
+
+    warnings.forEach(w => {
+      if (!w.handled) stats.unhandled++
+      if (w.level === 'high') stats.highRisk++
+      if (w.type === '漏打卡') stats.missCheckin++
+    })
+
+    return stats
   },
 
   // 清除筛选

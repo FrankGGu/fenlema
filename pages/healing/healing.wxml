@@ -1,0 +1,97 @@
+<!--pages/healing/healing.wxml-->
+<view class="healing-page">
+  <!-- 顶部标题和描述 -->
+  <view class="header">
+    <view class="title">疗愈空间</view>
+    <view class="subtitle">在这里，找到平静与修复的力量</view>
+  </view>
+
+  <!-- 类型筛选 -->
+  <view class="filter-container">
+    <view class="filter-list">
+      <view 
+        class="filter-item {{selectedType === 'all' ? 'active' : ''}}" 
+        data-type="all" 
+        bindtap="switchType"
+      >
+        全部
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'audio' ? 'active' : ''}}" 
+        data-type="audio" 
+        bindtap="switchType"
+      >
+        <text class="iconfont icon-audio"></text> 音频
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'article' ? 'active' : ''}}" 
+        data-type="article" 
+        bindtap="switchType"
+      >
+        <text class="iconfont icon-article"></text> 文章
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'card' ? 'active' : ''}}" 
+        data-type="card" 
+        bindtap="switchType"
+      >
+        <text class="iconfont icon-card"></text> 卡片
+      </view>
+    </view>
+  </view>
+
+  <!-- 疗愈内容列表 -->
+  <view class="healing-list">
+    <block wx:for="{{healingList}}" wx:key="id">
+      <view class="healing-item {{item.type}}">
+        <view class="item-header">
+          <view class="item-type">
+            <text class="iconfont icon-{{item.icon}}"></text>
+            <text class="type-text">
+              {{item.type === 'audio' ? '音频' : item.type === 'article' ? '文章' : item.type === 'card' ? '卡片' : '练习'}}
+            </text>
+          </view>
+          <view class="item-status {{item.completed || item.played || item.read ? 'completed' : ''}}">
+            {{item.completed || item.played || item.read ? '已完成' : '未开始'}}
+          </view>
+        </view>
+        
+        <view class="item-content">
+          <view class="item-title">{{item.title}}</view>
+          <view class="item-desc">
+            {{item.description || item.content || (item.duration ? '时长：' + item.duration : '')}}
+          </view>
+        </view>
+
+        <view class="item-actions">
+          <block wx:if="{{item.type === 'audio'}}">
+            <button class="action-btn play-btn" data-id="{{item.id}}" bindtap="playAudio">
+              <text class="iconfont icon-play"></text> 播放
+            </button>
+          </block>
+          <block wx:if="{{item.type === 'article'}}">
+            <button class="action-btn read-btn" data-id="{{item.id}}" bindtap="readArticle">
+              <text class="iconfont icon-read"></text> 阅读
+            </button>
+          </block>
+          <block wx:if="{{item.type === 'card'}}">
+            <button class="action-btn complete-btn" data-id="{{item.id}}" bindtap="completeCard">
+              <text class="iconfont icon-check"></text> 完成
+            </button>
+          </block>
+          <block wx:if="{{item.type === 'exercise'}}">
+            <button class="action-btn start-btn" data-id="{{item.id}}" bindtap="completeCard">
+              <text class="iconfont icon-start"></text> 开始
+            </button>
+          </block>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer-tip">
+    <text class="iconfont icon-heart"></text>
+    每天花一点时间疗愈自己，关系也会变得更温暖
+  </view>
+</view>

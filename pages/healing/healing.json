@@ -1,0 +1,8 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "疗愈内容",
+  "navigationBarBackgroundColor": "#FDF6F0",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#FDF6F0",
+  "enablePullDownRefresh": false
+}

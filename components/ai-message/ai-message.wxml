@@ -1,0 +1,62 @@
+<!--components/ai-message/ai-message.wxml-->
+<view 
+  class="message-container {{message.sender}}"
+  bindtap="onMessageTap"
+>
+  <!-- 头像 -->
+  <view class="message-avatar" wx:if="{{showAvatar}}">
+    <image 
+      class="avatar-image" 
+      src="{{getMessageStyle().avatar}}" 
+      mode="aspectFill"
+    ></image>
+    <text class="avatar-icon">{{getMessageStyle().icon}}</text>
+  </view>
+
+  <!-- 消息内容 -->
+  <view class="message-content">
+    <!-- 消息气泡 -->
+    <view 
+      class="message-bubble" 
+      style="background-color: {{getMessageStyle().bgColor}}; color: {{getMessageStyle().textColor}};"
+    >
+      <!-- 消息文本 -->
+      <view class="message-text">{{message.content}}</view>
+
+      <!-- 建议列表 -->
+      <view class="suggestions-container" wx:if="{{message.suggestions && message.suggestions.length > 0}}">
+        <view class="suggestions-title">
+          <text class="iconfont icon-suggestion"></text> 建议方案
+        </view>
+        <view class="suggestions-list">
+          <block wx:for="{{message.suggestions}}" wx:key="index">
+            <view 
+              class="suggestion-item" 
+              data-index="{{index}}" 
+              bindtap="onSuggestionTap"
+            >
+              <text class="suggestion-index">{{index + 1}}.</text>
+              <text class="suggestion-text">{{item}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 消息元信息 -->
+    <view class="message-meta">
+      <!-- 时间 -->
+      <text class="message-time" wx:if="{{showTime}}">
+        {{formatTime(message.timestamp)}}
+      </text>
+      
+      <!-- 已读状态 -->
+      <text 
+        class="message-read-status {{message.isRead ? 'read' : 'unread'}}" 
+        wx:if="{{showReadStatus && message.sender === 'user'}}"
+      >
+        {{message.isRead ? '已读' : '未读'}}
+      </text>
+    </view>
+  </view>
+</view>

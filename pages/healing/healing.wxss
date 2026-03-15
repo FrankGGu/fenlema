@@ -1,0 +1,204 @@
+/* pages/healing/healing.wxss */
+.healing-page {
+  min-height: 100vh;
+  background-color: #FDF6F0;
+  padding: 20rpx 30rpx 40rpx;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40rpx;
+  padding-top: 20rpx;
+}
+
+.header .title {
+  font-size: 48rpx;
+  font-weight: 600;
+  color: #5C4033;
+  margin-bottom: 10rpx;
+}
+
+.header .subtitle {
+  font-size: 28rpx;
+  color: #8B7355;
+  opacity: 0.8;
+}
+
+.filter-container {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(139, 115, 85, 0.08);
+}
+
+.filter-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  font-size: 28rpx;
+  color: #8B7355;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.filter-item.active {
+  background-color: #FFE8D6;
+  color: #D4A574;
+  font-weight: 500;
+}
+
+.filter-item .iconfont {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+.healing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.healing-item {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(139, 115, 85, 0.08);
+}
+
+.healing-item.audio {
+  border-left: 8rpx solid #D4A574;
+}
+
+.healing-item.article {
+  border-left: 8rpx solid #A8D5BA;
+}
+
+.healing-item.card {
+  border-left: 8rpx solid #FFB6C1;
+}
+
+.healing-item.exercise {
+  border-left: 8rpx solid #B19CD9;
+}
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.item-type {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #8B7355;
+}
+
+.item-type .iconfont {
+  margin-right: 10rpx;
+  font-size: 28rpx;
+}
+
+.item-type .type-text {
+  font-weight: 500;
+}
+
+.item-status {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  background-color: #F5F5F5;
+  color: #999;
+}
+
+.item-status.completed {
+  background-color: #E8F5E8;
+  color: #5CB85C;
+}
+
+.item-content {
+  margin-bottom: 30rpx;
+}
+
+.item-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #5C4033;
+  margin-bottom: 12rpx;
+  line-height: 1.4;
+}
+
+.item-desc {
+  font-size: 26rpx;
+  color: #8B7355;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.item-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  font-size: 26rpx;
+  padding: 16rpx 36rpx;
+  border-radius: 20rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.action-btn .iconfont {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+.play-btn {
+  background-color: #FFE8D6;
+  color: #D4A574;
+}
+
+.read-btn {
+  background-color: #E8F5E9;
+  color: #5CB85C;
+}
+
+.complete-btn {
+  background-color: #FFE8E8;
+  color: #FF6B6B;
+}
+
+.start-btn {
+  background-color: #E8EAF6;
+  color: #5C6BC0;
+}
+
+.action-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.footer-tip {
+  text-align: center;
+  margin-top: 50rpx;
+  padding: 30rpx;
+  font-size: 26rpx;
+  color: #8B7355;
+  opacity: 0.7;
+}
+
+.footer-tip .iconfont {
+  margin-right: 10rpx;
+  color: #FF6B6B;
+  font-size: 28rpx;
+}

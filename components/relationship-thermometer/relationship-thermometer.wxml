@@ -1,0 +1,70 @@
+<!--components/relationship-thermometer/relationship-thermometer.wxml-->
+<view 
+  class="thermometer-container {{size}}"
+  bindtap="onThermometerTap"
+>
+  <!-- 温度计主体 -->
+  <view class="thermometer">
+    <!-- 温度计背景 -->
+    <view class="thermometer-bg">
+      <!-- 温度计刻度 -->
+      <view class="thermometer-scale">
+        <view class="scale-item" style="bottom: 0%;">0</view>
+        <view class="scale-item" style="bottom: 25%;">25</view>
+        <view class="scale-item" style="bottom: 50%;">50</view>
+        <view class="scale-item" style="bottom: 75%;">75</view>
+        <view class="scale-item" style="bottom: 100%;">100</view>
+      </view>
+      
+      <!-- 温度计液体 -->
+      <view 
+        class="thermometer-liquid" 
+        style="height: {{temperaturePercent}}%; background-color: {{temperatureColor}};"
+      ></view>
+    </view>
+
+    <!-- 温度计球体 -->
+    <view class="thermometer-bulb" style="background-color: {{temperatureColor}};"></view>
+
+    <!-- 当前温度值 -->
+    <view class="temperature-value" style="color: {{temperatureColor}};">
+      {{temperature}}°
+    </view>
+  </view>
+
+  <!-- 温度信息 -->
+  <view class="temperature-info">
+    <view class="temperature-header">
+      <text class="temperature-icon">{{temperatureIcon}}</text>
+      <text class="temperature-level {{temperatureLevel}}">
+        {{temperatureDescription}}
+      </text>
+      <text 
+        class="trend-arrow" 
+        wx:if="{{showTrend}}"
+        style="color: {{trendColor}};"
+      >
+        {{trendArrow}}
+      </text>
+    </view>
+
+    <!-- 详细描述 -->
+    <view class="temperature-desc" wx:if="{{showDescription}}">
+      <block wx:if="{{temperatureLevel === 'excellent'}}">
+        你们的关系非常温暖，继续保持良好的沟通和互动吧！
+      </block>
+      <block wx:if="{{temperatureLevel === 'good'}}">
+        关系状态良好，偶尔的小摩擦是正常的，及时沟通就好。
+      </block>
+      <block wx:if="{{temperatureLevel === 'normal'}}">
+        关系温度正常，建议多花时间相处，增加亲密互动。
+      </block>
+      <block wx:if="{{temperatureLevel === 'low'}}">
+        关系温度偏低，建议主动沟通，了解彼此的需求和感受。
+      </block>
+      <block wx:if="{{temperatureLevel === 'critical'}}">
+        关系温度过低，建议使用AI调解功能或寻求专业帮助。
+      </block>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "心情树洞",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#FFF9F9",
+  "backgroundTextStyle": "dark"
+}

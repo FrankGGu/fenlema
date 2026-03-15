@@ -1,0 +1,119 @@
+<!--components/task-card/task-card.wxml-->
+<view 
+  class="task-card {{task.status}} {{clickable ? 'clickable' : ''}}"
+  bindtap="onTaskTap"
+>
+  <!-- 任务头部 -->
+  <view class="task-header">
+    <!-- 任务类型标签 -->
+    <view 
+      class="type-tag" 
+      style="background-color: {{getTypeConfig().bgColor}}; color: {{getTypeConfig().color}};"
+    >
+      <text class="type-icon">{{getTypeConfig().icon}}</text>
+      <text class="type-name">{{getTypeConfig().name}}</text>
+    </view>
+
+    <!-- 优先级标签 -->
+    <view 
+      class="priority-tag" 
+      style="color: {{getPriorityConfig().color}}; border-color: {{getPriorityConfig().color}};"
+    >
+      {{getPriorityConfig().name}}
+    </view>
+  </view>
+
+  <!-- 任务标题和描述 -->
+  <view class="task-body">
+    <view class="task-title">{{task.title}}</view>
+    <view class="task-description" wx:if="{{task.description}}">
+      {{task.description}}
+    </view>
+  </view>
+
+  <!-- 任务详情 -->
+  <view class="task-details">
+    <!-- 截止日期 -->
+    <view class="detail-item due-date">
+      <text class="iconfont icon-calendar"></text>
+      <text class="detail-text">{{formatDate(task.dueDate)}}</text>
+    </view>
+
+    <!-- 预计时间 -->
+    <view class="detail-item estimated-time" wx:if="{{task.estimatedTime}}">
+      <text class="iconfont icon-time"></text>
+      <text class="detail-text">{{task.estimatedTime}}</text>
+    </view>
+
+    <!-- 奖励积分 -->
+    <view class="detail-item reward-points" wx:if="{{task.rewardPoints > 0}}">
+      <text class="iconfont icon-reward"></text>
+      <text class="detail-text">{{task.rewardPoints}}积分</text>
+    </view>
+  </view>
+
+  <!-- 进度条 -->
+  <view class="progress-container" wx:if="{{showProgress}}">
+    <view class="progress-bar">
+      <view 
+        class="progress-fill" 
+        style="width: {{progress}}%; background-color: {{getTypeConfig().color}};"
+      ></view>
+    </view>
+    <text class="progress-text">{{progress}}%</text>
+  </view>
+
+  <!-- 任务步骤 -->
+  <view class="task-steps" wx:if="{{task.steps && task.steps.length > 0}}">
+    <view class="steps-title">任务步骤</view>
+    <view class="steps-list">
+      <block wx:for="{{task.steps}}" wx:key="index">
+        <view class="step-item">
+          <view class="step-checkbox {{item.completed ? 'completed' : ''}}">
+            <text class="iconfont icon-check" wx:if="{{item.completed}}"></text>
+          </view>
+          <text class="step-text">{{item.text}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="task-actions" wx:if="{{showActions}}">
+    <block wx:if="{{task.status === 'pending'}}">
+      <button class="action-btn start-btn" bindtap="onStartTap">
+        <text class="iconfont icon-start"></text> 开始任务
+      </button>
+      <button class="action-btn edit-btn" bindtap="onEditTap">
+        <text class="iconfont icon-edit"></text> 编辑
+      </button>
+    </block>
+
+    <block wx:if="{{task.status === 'in_progress'}}">
+      <button class="action-btn complete-btn" bindtap="onCompleteTap">
+        <text class="iconfont icon-check"></text> 完成任务
+      </button>
+      <button class="action-btn cancel-btn" bindtap="onCancelTap">
+        <text class="iconfont icon-cancel"></text> 取消
+      </button>
+    </block>
+
+    <block wx:if="{{task.status === 'completed'}}">
+      <view class="completed-badge">
+        <text class="iconfont icon-success"></text> 已完成
+      </view>
+      <button class="action-btn delete-btn" bindtap="onDeleteTap">
+        <text class="iconfont icon-delete"></text> 删除
+      </button>
+    </block>
+
+    <block wx:if="{{task.status === 'cancelled'}}">
+      <view class="cancelled-badge">
+        <text class="iconfont icon-cancel"></text> 已取消
+      </view>
+      <button class="action-btn delete-btn" bindtap="onDeleteTap">
+        <text class="iconfont icon-delete"></text> 删除
+      </button>
+    </block>
+  </view>
+</view>

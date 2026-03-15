@@ -1,0 +1,289 @@
+/* components/task-card/task-card.wxss */
+.task-card {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(139, 115, 85, 0.08);
+  border-left: 8rpx solid #D4A574;
+  transition: all 0.3s ease;
+}
+
+.task-card.clickable:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 30rpx rgba(139, 115, 85, 0.15);
+}
+
+/* 不同状态边框颜色 */
+.task-card.pending {
+  border-left-color: #8B7355;
+}
+
+.task-card.in_progress {
+  border-left-color: #5C6BC0;
+}
+
+.task-card.completed {
+  border-left-color: #5CB85C;
+}
+
+.task-card.cancelled {
+  border-left-color: #999999;
+  opacity: 0.7;
+}
+
+/* 任务头部 */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.type-tag {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.type-icon {
+  font-size: 28rpx;
+  margin-right: 8rpx;
+}
+
+.type-name {
+  font-size: 24rpx;
+}
+
+.priority-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  border: 2rpx solid;
+  background-color: transparent;
+}
+
+/* 任务主体 */
+.task-body {
+  margin-bottom: 24rpx;
+}
+
+.task-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #5C4033;
+  margin-bottom: 12rpx;
+  line-height: 1.4;
+}
+
+.task-description {
+  font-size: 26rpx;
+  color: #8B7355;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* 任务详情 */
+.task-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #8B7355;
+}
+
+.detail-item .iconfont {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+  color: #D4A574;
+}
+
+.due-date .iconfont {
+  color: #FF6B6B;
+}
+
+.estimated-time .iconfont {
+  color: #5C6BC0;
+}
+
+.reward-points .iconfont {
+  color: #FF9800;
+}
+
+/* 进度条 */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12rpx;
+  background-color: #F5F5F5;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6rpx;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #5C4033;
+  font-weight: 500;
+  min-width: 60rpx;
+  text-align: right;
+}
+
+/* 任务步骤 */
+.task-steps {
+  margin-bottom: 24rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.steps-title {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #5C4033;
+  margin-bottom: 16rpx;
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.step-checkbox {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  border: 2rpx solid #D4A574;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-checkbox.completed {
+  background-color: #D4A574;
+  border-color: #D4A574;
+}
+
+.step-checkbox.completed .iconfont {
+  font-size: 20rpx;
+  color: #FFFFFF;
+}
+
+.step-text {
+  font-size: 24rpx;
+  color: #8B7355;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* 操作按钮 */
+.task-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  flex: 1;
+  border-radius: 20rpx;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+  font-weight: 500;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.action-btn .iconfont {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+
+.action-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.start-btn {
+  background-color: #FFE8D6;
+  color: #D4A574;
+}
+
+.complete-btn {
+  background-color: #E8F5E8;
+  color: #5CB85C;
+}
+
+.cancel-btn {
+  background-color: #FFE8E8;
+  color: #FF6B6B;
+}
+
+.edit-btn {
+  background-color: #E8EAF6;
+  color: #5C6BC0;
+}
+
+.delete-btn {
+  background-color: #F5F5F5;
+  color: #666666;
+}
+
+/* 已完成和已取消徽章 */
+.completed-badge,
+.cancelled-badge {
+  flex: 1;
+  border-radius: 20rpx;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completed-badge {
+  background-color: #E8F5E8;
+  color: #5CB85C;
+}
+
+.cancelled-badge {
+  background-color: #F5F5F5;
+  color: #999999;
+}
+
+.completed-badge .iconfont,
+.cancelled-badge .iconfont {
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}

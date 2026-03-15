@@ -306,3 +306,46 @@ page {
 .star.empty {
   color: #F0F0F0;
 }
+
+/* 图标字体样式 */
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 常用图标Unicode编码 */
+.icon-heart::before { content: "❤️"; }
+.icon-mood::before { content: "😊"; }
+.icon-communication::before { content: "💬"; }
+.icon-intimacy::before { content: "💖"; }
+.icon-conflict::before { content: "⚡"; }
+.icon-note::before { content: "📝"; }
+.icon-calendar::before { content: "📅"; }
+.icon-time::before { content: "⏰"; }
+.icon-reward::before { content: "🏆"; }
+.icon-start::before { content: "▶️"; }
+.icon-check::before { content: "✅"; }
+.icon-cancel::before { content: "❌"; }
+.icon-edit::before { content: "✏️"; }
+.icon-delete::before { content: "🗑️"; }
+.icon-success::before { content: "🎉"; }
+.icon-audio::before { content: "🎵"; }
+.icon-article::before { content: "📰"; }
+.icon-card::before { content: "💳"; }
+.icon-play::before { content: "▶️"; }
+.icon-read::before { content: "📖"; }
+.icon-flash::before { content: "⚡"; }
+.icon-phone::before { content: "📱"; }
+.icon-sms::before { content: "💬"; }
+.icon-login::before { content: "🔑"; }
+.icon-wechat::before { content: "💚"; }
+.icon-arrow-right::before { content: "➡️"; }
+.icon-close::before { content: "✕"; }
+.icon-warning::before { content: "⚠️"; }
+.icon-service::before { content: "👨‍💼"; }
+.icon-logout::before { content: "🚪"; }
+.icon-suggestion::before { content: "💡"; }
+.icon-empty::before { content: "📭"; }

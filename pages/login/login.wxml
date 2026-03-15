@@ -1,0 +1,185 @@
+<!--pages/login/login.wxml-->
+<view class="login-page">
+  <!-- 顶部logo和标题 -->
+  <view class="header">
+    <view class="logo">
+      <text class="iconfont icon-heart"></text>
+    </view>
+    <view class="title">关系晴雨表</view>
+    <view class="subtitle">让关系在理解中成长，在倾听中修复</view>
+  </view>
+
+  <!-- 登录方式切换 -->
+  <view class="login-type-container">
+    <view class="type-tabs">
+      <view 
+        class="type-tab {{loginType === 'quick' ? 'active' : ''}}" 
+        data-type="quick" 
+        bindtap="switchLoginType"
+      >
+        快速登录
+      </view>
+      <view 
+        class="type-tab {{loginType === 'phone' ? 'active' : ''}}" 
+        data-type="phone" 
+        bindtap="switchLoginType"
+      >
+        手机登录
+      </view>
+      <view 
+        class="type-tab {{loginType === 'wechat' ? 'active' : ''}}" 
+        data-type="wechat" 
+        bindtap="switchLoginType"
+      >
+        微信登录
+      </view>
+    </view>
+  </view>
+
+  <!-- 快速登录 -->
+  <block wx:if="{{loginType === 'quick'}}">
+    <view class="login-form">
+      <view class="form-tip">
+        点击下方按钮快速体验，我们将为您创建临时账号
+      </view>
+      <button class="login-btn quick-login-btn" bindtap="quickLogin">
+        <text class="iconfont icon-flash"></text> 快速体验
+      </button>
+    </view>
+  </block>
+
+  <!-- 手机登录 -->
+  <block wx:if="{{loginType === 'phone'}}">
+    <view class="login-form">
+      <view class="form-item">
+        <view class="form-label">
+          <text class="iconfont icon-phone"></text> 手机号
+        </view>
+        <input 
+          class="form-input" 
+          type="number" 
+          maxlength="11" 
+          placeholder="请输入手机号" 
+          value="{{phoneNumber}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+
+      <view class="form-item">
+        <view class="form-label">
+          <text class="iconfont icon-sms"></text> 验证码
+        </view>
+        <view class="sms-input-container">
+          <input 
+            class="form-input sms-input" 
+            type="number" 
+            maxlength="6" 
+            placeholder="请输入验证码" 
+            value="{{smsCode}}"
+            bindinput="onSmsCodeInput"
+          />
+          <button 
+            class="sms-btn {{countdown > 0 ? 'disabled' : ''}}" 
+            bindtap="getSmsCode"
+            disabled="{{countdown > 0}}"
+          >
+            {{countdown > 0 ? countdown + 's后重试' : '获取验证码'}}
+          </button>
+        </view>
+      </view>
+
+      <button class="login-btn phone-login-btn" bindtap="phoneLogin">
+        <text class="iconfont icon-login"></text> 登录
+      </button>
+
+      <view class="form-links">
+        <text class="link-text" bindtap="goToRegister">注册账号</text>
+        <text class="link-text" bindtap="goToForgotPassword">忘记密码</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 微信登录 -->
+  <block wx:if="{{loginType === 'wechat'}}">
+    <view class="login-form">
+      <view class="form-tip">
+        使用微信授权登录，获取更好的个性化体验
+      </view>
+      <button class="login-btn wechat-login-btn" bindtap="wechatLogin">
+        <text class="iconfont icon-wechat"></text> 微信一键登录
+      </button>
+      <view class="wechat-tip">
+        授权后，我们将获取您的公开信息（昵称、头像）
+      </view>
+    </view>
+  </block>
+
+  <!-- 隐私协议 -->
+  <view class="privacy-container">
+    <view class="privacy-checkbox" bindtap="toggleAgreePrivacy">
+      <view class="checkbox-icon {{agreePrivacy ? 'checked' : ''}}">
+        <text class="iconfont icon-check" wx:if="{{agreePrivacy}}"></text>
+      </view>
+      <text class="privacy-text">
+        我已阅读并同意
+        <text class="privacy-link" bindtap="showPrivacyModal">《用户协议》</text>
+        和
+        <text class="privacy-link" bindtap="showPrivacyModal">《隐私政策》</text>
+      </text>
+    </view>
+  </view>
+
+  <!-- 底部说明 -->
+  <view class="footer">
+    <view class="footer-text">
+      登录即代表您已同意我们的服务条款
+    </view>
+    <view class="footer-text small">
+      本产品仅供体验，数据将定期清理
+    </view>
+  </view>
+
+  <!-- 隐私协议模态框 -->
+  <view class="modal-container {{showPrivacyModal ? 'show' : ''}}">
+    <view class="modal-mask" bindtap="hidePrivacyModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <view class="modal-title">用户协议与隐私政策</view>
+        <button class="modal-close" bindtap="hidePrivacyModal">
+          <text class="iconfont icon-close"></text>
+        </button>
+      </view>
+      <view class="modal-body">
+        <scroll-view class="privacy-content" scroll-y>
+          <view class="privacy-section">
+            <view class="section-title">1. 服务说明</view>
+            <view class="section-content">
+              「关系晴雨表」是一款面向情侣/亲密关系人群的“关系打卡 + AI调解 + 情绪疗愈”产品。我们致力于通过技术手段提供情感支持，但无法替代专业心理咨询。
+            </view>
+          </view>
+          <view class="privacy-section">
+            <view class="section-title">2. 数据使用</view>
+            <view class="section-content">
+              我们收集的打卡数据、心情记录仅用于为您提供个性化分析和建议。所有数据均加密存储，不会与第三方共享。您可以随时导出或删除个人数据。
+            </view>
+          </view>
+          <view class="privacy-section">
+            <view class="section-title">3. AI调解说明</view>
+            <view class="section-content">
+              AI调解功能基于算法分析提供建议，仅供参考。在关系出现严重问题时，我们建议您寻求专业心理咨询师的帮助。
+            </view>
+          </view>
+          <view class="privacy-section">
+            <view class="section-title">4. 免责声明</view>
+            <view class="section-content">
+              本产品不承担因使用服务而产生的任何直接或间接责任。关系修复需要双方共同努力，技术工具仅作为辅助手段。
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn confirm" bindtap="hidePrivacyModal">我已阅读并同意</button>
+      </view>
+    </view>
+  </view>
+</view>

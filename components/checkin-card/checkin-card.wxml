@@ -1,0 +1,101 @@
+<!--components/checkin-card/checkin-card.wxml-->
+<view 
+  class="checkin-card {{checkinData.completed ? 'completed' : 'incomplete'}} {{readOnly ? 'read-only' : ''}}"
+  bindtap="onCardTap"
+>
+  <!-- 卡片头部：日期和状态 -->
+  <view class="card-header">
+    <view class="date-info">
+      <text class="date">{{checkinData.date}}</text>
+      <text class="status {{checkinData.completed ? 'completed' : 'incomplete'}}">
+        {{checkinData.completed ? '已打卡' : '未打卡'}}
+      </text>
+    </view>
+    
+    <!-- 操作按钮 -->
+    <view class="action-buttons" wx:if="{{!readOnly && (showEdit || showDelete)}}">
+      <button 
+        class="action-btn edit-btn" 
+        wx:if="{{showEdit}}"
+        bindtap="onEditTap"
+      >
+        <text class="iconfont icon-edit"></text>
+      </button>
+      <button 
+        class="action-btn delete-btn" 
+        wx:if="{{showDelete}}"
+        bindtap="onDeleteTap"
+      >
+        <text class="iconfont icon-delete"></text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 打卡内容 -->
+  <view class="card-content" wx:if="{{checkinData.completed}}">
+    <!-- 心情 -->
+    <view class="checkin-item mood-item">
+      <view class="item-label">
+        <text class="iconfont icon-mood"></text> 心情
+      </view>
+      <view class="item-value">
+        <text class="score">{{checkinData.mood}}/5</text>
+        <text class="icon">{{moodIcons[checkinData.mood]}}</text>
+        <text class="description">{{getMoodDescription(checkinData.mood)}}</text>
+      </view>
+    </view>
+
+    <!-- 沟通 -->
+    <view class="checkin-item communication-item">
+      <view class="item-label">
+        <text class="iconfont icon-communication"></text> 沟通
+      </view>
+      <view class="item-value">
+        <text class="score">{{checkinData.communication}}/4</text>
+        <text class="icon">{{communicationIcons[checkinData.communication]}}</text>
+        <text class="description">{{getCommunicationDescription(checkinData.communication)}}</text>
+      </view>
+    </view>
+
+    <!-- 亲密度 -->
+    <view class="checkin-item intimacy-item">
+      <view class="item-label">
+        <text class="iconfont icon-intimacy"></text> 亲密度
+      </view>
+      <view class="item-value">
+        <text class="score">{{checkinData.intimacy}}/4</text>
+        <text class="icon">{{intimacyIcons[checkinData.intimacy]}}</text>
+        <text class="description">{{getIntimacyDescription(checkinData.intimacy)}}</text>
+      </view>
+    </view>
+
+    <!-- 冲突情况 -->
+    <view class="checkin-item conflict-item" wx:if="{{checkinData.conflict > 0}}">
+      <view class="item-label">
+        <text class="iconfont icon-conflict"></text> 冲突
+      </view>
+      <view class="item-value">
+        <text class="level {{checkinData.conflict >= 3 ? 'severe' : checkinData.conflict >= 2 ? 'medium' : 'mild'}}">
+          {{conflictLevels[checkinData.conflict]}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="checkin-item note-item" wx:if="{{checkinData.note}}">
+      <view class="item-label">
+        <text class="iconfont icon-note"></text> 备注
+      </view>
+      <view class="item-value note-content">
+        {{checkinData.note}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 未打卡提示 -->
+  <view class="empty-content" wx:if="{{!checkinData.completed}}">
+    <text class="iconfont icon-empty"></text>
+    <view class="empty-text">今日尚未打卡</view>
+    <button class="checkin-btn" bindtap="onCardTap">立即打卡</button>
+  </view>
+</view>

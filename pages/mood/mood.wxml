@@ -1,0 +1,278 @@
+<!--pages/mood/mood.wxml-->
+<view class="page-container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else class="main-content">
+    <!-- 树洞说明 -->
+    <view class="intro-card">
+      <view class="intro-header">
+        <text class="intro-icon">🌳</text>
+        <text class="intro-title">心情树洞</text>
+      </view>
+      <text class="intro-text">
+        这里是你的私人空间，可以匿名记录任何情绪和感受。
+        你的记录只有你自己能看到，AI助手会根据你的情绪推荐适合的疗愈内容。
+      </text>
+    </view>
+
+    <!-- 情绪记录输入 -->
+    <view class="input-card">
+      <view class="section-header">
+        <text class="section-title">记录此刻心情</text>
+      </view>
+      
+      <!-- 内容输入 -->
+      <textarea 
+        class="content-input" 
+        placeholder="写下你的感受、想法或任何想说的话..."
+        value="{{moodRecord.content}}"
+        bindinput="inputContent"
+        maxlength="500"
+        auto-height
+      ></textarea>
+      <view class="input-footer">
+        <text class="char-count">{{moodRecord.content.length}}/500</text>
+      </view>
+      
+      <!-- 情绪标签 -->
+      <view class="emotion-tags">
+        <text class="tags-title">选择情绪标签：</text>
+        <view class="tags-grid">
+          <view 
+            wx:for="{{emotionTags}}" 
+            wx:key="id"
+            class="tag-item {{item.selected ? 'selected' : ''}}"
+            bindtap="selectEmotionTag"
+            data-id="{{item.id}}"
+          >
+            <text class="tag-emoji">{{item.emoji}}</text>
+            <text class="tag-name">{{item.name}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 匿名选项 -->
+      <view class="anonymous-option">
+        <view class="option-item" bindtap="toggleAnonymous">
+          <view class="checkbox {{moodRecord.isAnonymous ? 'checked' : ''}}">
+            <text class="checkmark" wx:if="{{moodRecord.isAnonymous}}">✓</text>
+          </view>
+          <text class="option-text">匿名记录（推荐）</text>
+        </view>
+        <text class="option-hint">匿名记录更安全，只有你自己能看到</text>
+      </view>
+      
+      <!-- 提交按钮 -->
+      <button class="btn-submit" bindtap="submitMoodRecord">
+        记录到树洞
+      </button>
+    </view>
+
+    <!-- 情绪统计 -->
+    <view class="stats-card">
+      <view class="section-header">
+        <text class="section-title">情绪统计</text>
+        <text class="stats-period">最近30天</text>
+      </view>
+      
+      <view class="emotion-stats">
+        <view wx:for="{{getEmotionStats()}}" wx:key="tag" class="stat-item">
+          <view class="stat-header">
+            <text class="stat-emoji">{{item.emoji}}</text>
+            <text class="stat-name">{{item.name}}</text>
+            <text class="stat-count">{{item.count}}次</text>
+          </view>
+          <view class="stat-bar">
+            <view class="bar-fill" style="width: {{item.percentage}}%;"></view>
+          </view>
+          <text class="stat-percentage">{{item.percentage}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 历史记录 -->
+    <view class="history-card">
+      <view class="section-header">
+        <text class="section-title">历史记录</text>
+        
+        <!-- 筛选器 -->
+        <view class="filters">
+          <view class="filter-group">
+            <text class="filter-label">情绪：</text>
+            <view class="filter-tags">
+              <text 
+                class="filter-tag {{filter.tag === 'all' ? 'active' : ''}}"
+                bindtap="filterRecords"
+                data-type="tag"
+                data-value="all"
+              >全部</text>
+              <text 
+                class="filter-tag {{filter.tag === 'happy' ? 'active' : ''}}"
+                bindtap="filterRecords"
+                data-type="tag"
+                data-value="happy"
+              >开心</text>
+              <text 
+                class="filter-tag {{filter.tag === 'sad' ? 'active' : ''}}"
+                bindtap="filterRecords"
+                data-type="tag"
+                data-value="sad"
+              >难过</text>
+            </view>
+          </view>
+          
+          <view class="filter-group">
+            <text class="filter-label">时间：</text>
+            <view class="filter-dates">
+              <text 
+                class="filter-date {{filter.date === 'all' ? 'active' : ''}}"
+                bindtap="filterRecords"
+                data-type="date"
+                data-value="all"
+              >全部</text>
+              <text 
+                class="filter-date {{filter.date === 'today' ? 'active' : ''}}"
+                bindtap="filterRecords"
+                data-type="date"
+                data-value="today"
+              >今天</text>
+              <text 
+                class="filter-date {{filter.date === 'week' ? 'active' : ''}}"
+                bindtap="filterRecords"
+                data-type="date"
+                data-value="week"
+              >本周</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="records-list">
+        <view wx:if="{{getFilteredRecords().length === 0}}" class="no-records">
+          <text class="no-data-text">暂无记录</text>
+          <text class="no-data-hint">写下你的第一份心情记录吧</text>
+        </view>
+        
+        <view wx:else class="record-items">
+          <view 
+            wx:for="{{getFilteredRecords()}}" 
+            wx:key="id"
+            class="record-item"
+            bindtap="viewRecordDetail"
+            data-id="{{item.id}}"
+          >
+            <view class="record-content">
+              <text class="record-text">{{item.content}}</text>
+              
+              <view class="record-tags">
+                <view wx:for="{{item.emotionTags}}" wx:key="index" class="record-tag">
+                  <text class="tag-emoji">
+                    {{emotionTags.find(t => t.id === item2)?.emoji || '❓'}}
+                  </text>
+                  <text class="tag-name">
+                    {{emotionTags.find(t => t.id === item2)?.name || item2}}
+                  </text>
+                </view>
+              </view>
+            </view>
+            
+            <view class="record-footer">
+              <text class="record-date">{{item.formattedDate}}</text>
+              <text class="record-anonymous" wx:if="{{item.isAnonymous}}">匿名</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view wx:if="{{getFilteredRecords().length > 0}}" class="history-footer">
+        <text class="clear-filters" bindtap="clearFilters">清除筛选</text>
+      </view>
+    </view>
+
+    <!-- 推荐疗愈内容 -->
+    <view wx:if="{{recommendedContent.length > 0}}" class="recommended-card">
+      <view class="section-header">
+        <text class="section-title">为你推荐</text>
+        <text class="recommended-count">{{recommendedContent.length}}个</text>
+      </view>
+      
+      <view class="recommended-list">
+        <view wx:for="{{recommendedContent}}" wx:key="id" class="recommended-item">
+          <view class="recommended-header">
+            <text class="recommended-title">{{item.title}}</text>
+            <text class="recommended-type type-{{item.type}}">
+              {{item.type === 'audio' ? '音频' : item.type === 'text' ? '文章' : '卡片'}}
+            </text>
+          </view>
+          
+          <text class="recommended-description">{{item.description}}</text>
+          
+          <view class="recommended-footer">
+            <text class="recommended-duration">{{item.duration}}</text>
+            <text class="recommended-reason">{{item.reason}}</text>
+            <button 
+              class="btn-view"
+              bindtap="viewHealingContent"
+              data-id="{{item.id}}"
+            >查看</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn btn-primary" bindtap="exportMoodReport">
+        <text class="btn-icon">📊</text>
+        <text class="btn-text">情绪报告</text>
+      </button>
+      
+      <button class="btn btn-secondary" bindtap="shareMoodTreehole">
+        <text class="btn-icon">🌳</text>
+        <text class="btn-text">分享树洞</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 记录详情弹窗 -->
+  <view wx:if="{{showDetailModal}}" class="modal-overlay">
+    <view class="modal-container">
+      <view class="modal-header">
+        <text class="modal-title">记录详情</text>
+        <text class="modal-close" bindtap="hideDetailModal">×</text>
+      </view>
+      
+      <view class="modal-content">
+        <view wx:if="{{selectedRecord}}" class="record-detail">
+          <text class="detail-content">{{selectedRecord.content}}</text>
+          
+          <view class="detail-tags">
+            <view wx:for="{{selectedRecord.selectedTags}}" wx:key="name" class="detail-tag">
+              <text class="detail-tag-emoji">{{item.emoji}}</text>
+              <text class="detail-tag-name">{{item.name}}</text>
+            </view>
+          </view>
+          
+          <view class="detail-info">
+            <view class="info-item">
+              <text class="info-label">记录时间</text>
+              <text class="info-value">{{selectedRecord.formattedDate}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-label">记录方式</text>
+              <text class="info-value">{{selectedRecord.isAnonymous ? '匿名' : '实名'}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="btn btn-secondary" bindtap="deleteRecord">删除</button>
+        <button class="btn btn-primary" bindtap="hideDetailModal">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>

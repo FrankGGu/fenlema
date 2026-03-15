@@ -1,0 +1,230 @@
+/* components/checkin-card/checkin-card.wxss */
+.checkin-card {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(139, 115, 85, 0.08);
+  transition: all 0.3s ease;
+  border-left: 8rpx solid #D4A574;
+}
+
+.checkin-card.incomplete {
+  border-left-color: #FFB6C1;
+  opacity: 0.9;
+}
+
+.checkin-card.read-only {
+  opacity: 0.8;
+}
+
+.checkin-card:active:not(.read-only) {
+  transform: translateY(-4rpx);
+  box-shadow: 0 8rpx 30rpx rgba(139, 115, 85, 0.15);
+}
+
+/* 卡片头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #F5F5F5;
+}
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #5C4033;
+  margin-bottom: 8rpx;
+}
+
+.status {
+  font-size: 24rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  display: inline-block;
+  width: fit-content;
+}
+
+.status.completed {
+  background-color: #E8F5E8;
+  color: #5CB85C;
+}
+
+.status.incomplete {
+  background-color: #FFE8E8;
+  color: #FF6B6B;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.action-btn:active {
+  opacity: 0.8;
+  transform: scale(0.9);
+}
+
+.edit-btn {
+  background-color: #FFE8D6;
+}
+
+.edit-btn .iconfont {
+  font-size: 28rpx;
+  color: #D4A574;
+}
+
+.delete-btn {
+  background-color: #FFE8E8;
+}
+
+.delete-btn .iconfont {
+  font-size: 28rpx;
+  color: #FF6B6B;
+}
+
+/* 打卡内容 */
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.checkin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.checkin-item:last-child {
+  border-bottom: none;
+}
+
+.item-label {
+  font-size: 28rpx;
+  color: #5C4033;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.item-label .iconfont {
+  margin-right: 12rpx;
+  font-size: 28rpx;
+  color: #D4A574;
+}
+
+.item-value {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.score {
+  font-size: 26rpx;
+  color: #8B7355;
+  font-weight: 500;
+}
+
+.icon {
+  font-size: 36rpx;
+}
+
+.description {
+  font-size: 26rpx;
+  color: #8B7355;
+  opacity: 0.9;
+  min-width: 120rpx;
+  text-align: right;
+}
+
+/* 冲突等级 */
+.level {
+  font-size: 26rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+
+.level.mild {
+  background-color: #FFF3CD;
+  color: #856404;
+}
+
+.level.medium {
+  background-color: #FFE8D6;
+  color: #D4A574;
+}
+
+.level.severe {
+  background-color: #FFE8E8;
+  color: #FF6B6B;
+}
+
+/* 备注 */
+.note-content {
+  font-size: 26rpx;
+  color: #8B7355;
+  line-height: 1.6;
+  max-width: 400rpx;
+  text-align: right;
+  opacity: 0.9;
+}
+
+/* 未打卡提示 */
+.empty-content {
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+.empty-content .iconfont {
+  font-size: 80rpx;
+  color: #FFE8D6;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #8B7355;
+  margin-bottom: 30rpx;
+  opacity: 0.8;
+}
+
+.checkin-btn {
+  background: linear-gradient(135deg, #FFB6C1 0%, #D4A574 100%);
+  color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 24rpx 48rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.checkin-btn:active {
+  opacity: 0.8;
+  transform: scale(0.98);
+}

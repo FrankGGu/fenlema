@@ -1,0 +1,163 @@
+<!--pages/calendar/calendar.wxml-->
+<view class="page-container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else class="main-content">
+    <!-- 月份切换 -->
+    <view class="month-header">
+      <view class="month-nav" bindtap="changeMonth" data-direction="prev">
+        <text class="nav-icon">‹</text>
+      </view>
+      <view class="month-title">
+        <text class="year">{{currentYear}}年</text>
+        <text class="month">{{currentMonth}}月</text>
+      </view>
+      <view class="month-nav" bindtap="changeMonth" data-direction="next">
+        <text class="nav-icon">›</text>
+      </view>
+    </view>
+
+    <!-- 日历 -->
+    <view class="calendar">
+      <!-- 星期标题 -->
+      <view class="week-header">
+        <text class="week-day">日</text>
+        <text class="week-day">一</text>
+        <text class="week-day">二</text>
+        <text class="week-day">三</text>
+        <text class="week-day">四</text>
+        <text class="week-day">五</text>
+        <text class="week-day">六</text>
+      </view>
+      
+      <!-- 日期格子 -->
+      <view class="calendar-grid">
+        <view 
+          wx:for="{{calendarDays}}" 
+          wx:key="index"
+          class="calendar-day {{item.type}} {{item.date === selectedDate ? 'selected' : ''}}"
+          bindtap="selectDate"
+          data-date="{{item}}"
+        >
+          <text class="day-number">{{item.day}}</text>
+          <view wx:if="{{item.hasCheckin}}" class="day-marker">
+            <view class="mood-dot mood-{{item.mood}}"></view>
+            <view wx:if="{{item.conflict >= 4}}" class="conflict-dot"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 选中日期详情 -->
+    <view class="selected-date-section">
+      <view class="section-header">
+        <text class="section-title">{{selectedDate}} 详情</text>
+        <text class="today-btn" bindtap="goToToday">今天</text>
+      </view>
+      
+      <view wx:if="{{selectedDateData}}" class="date-detail">
+        <view class="detail-item">
+          <text class="detail-label">心情</text>
+          <text class="detail-value mood-{{selectedDateData.mood}}">
+            {{selectedDateData.moodEmoji}} {{selectedDateData.moodText}}
+          </text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">沟通</text>
+          <view class="stars">
+            <text wx:for="{{5}}" wx:key="index" class="star {{index < selectedDateData.communication ? 'filled' : 'empty'}}">★</text>
+          </view>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">亲密度</text>
+          <view class="stars">
+            <text wx:for="{{5}}" wx:key="index" class="star {{index < selectedDateData.intimacy ? 'filled' : 'empty'}}">★</text>
+          </view>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">冲突情况</text>
+          <text class="detail-value conflict-{{selectedDateData.conflict}}">
+            {{selectedDateData.conflictText}}
+          </text>
+        </view>
+        <view wx:if="{{selectedDateData.note}}" class="detail-item note-item">
+          <text class="detail-label">备注</text>
+          <text class="detail-note">{{selectedDateData.note}}</text>
+        </view>
+        <button class="btn btn-secondary" bindtap="viewDetail">查看详情</button>
+      </view>
+      
+      <view wx:else class="no-data">
+        <text>这一天没有打卡记录</text>
+        <text class="hint">点击日期格子查看其他日期的记录</text>
+      </view>
+    </view>
+
+    <!-- 统计信息 -->
+    <view class="stats-section">
+      <view class="section-header">
+        <text class="section-title">统计概览</text>
+        <text class="period">最近30天</text>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.checkinRate}}%</text>
+          <text class="stat-label">打卡率</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.avgMood}}</text>
+          <text class="stat-label">平均心情</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.avgCommunication}}</text>
+          <text class="stat-label">平均沟通</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.conflictDays}}天</text>
+          <text class="stat-label">冲突日</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 温度趋势 -->
+    <view class="trend-section">
+      <view class="section-header">
+        <text class="section-title">关系温度趋势</text>
+        <text class="trend-period">最近30天</text>
+      </view>
+      
+      <view class="trend-chart">
+        <view class="chart-container">
+          <view class="chart-grid">
+            <view class="grid-line"></view>
+            <view class="grid-line"></view>
+            <view class="grid-line"></view>
+            <view class="grid-line"></view>
+          </view>
+          <view class="chart-line">
+            <view 
+              wx:for="{{temperatureTrend}}" 
+              wx:key="index"
+              class="chart-point"
+              style="left: {{(index / (temperatureTrend.length - 1)) * 100}}%; bottom: {{item.temperature}}%;"
+            >
+              <view class="point-tooltip">
+                <text class="tooltip-date">{{item.date}}</text>
+                <text class="tooltip-temp">{{item.temperature}}°</text>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="chart-labels">
+          <text class="chart-label">低</text>
+          <text class="chart-label">中</text>
+          <text class="chart-label">高</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

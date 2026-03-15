@@ -1,0 +1,181 @@
+<!--pages/index/index.wxml-->
+<view class="page-container">
+  <!-- 顶部状态栏 -->
+  <view class="status-bar">
+    <text class="date">{{today}}</text>
+    <view class="user-info" bindtap="goToProfile">
+      <image class="avatar" src="{{userInfo.avatar}}"></image>
+      <text class="nickname">{{userInfo.nickname}}</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 主要内容 -->
+  <view wx:else class="main-content">
+    <!-- 关系状态卡片 -->
+    <view class="card relationship-card">
+      <view class="card-header">
+        <text class="card-title">关系状态</text>
+        <text class="relationship-days">已连续打卡 {{relationship.continuousDays}} 天</text>
+      </view>
+      
+      <!-- 关系温度计 -->
+      <view class="temperature-section">
+        <view class="temperature-meter">
+          <view class="temperature-fill" style="width: {{relationship.temperature}}%; background-color: {{temperatureColor}};"></view>
+          <view class="temperature-indicator" style="left: {{relationship.temperature}}%;"></view>
+        </view>
+        <view class="temperature-info">
+          <text class="temperature-value">{{relationship.temperature}}°</text>
+          <text class="temperature-desc">{{temperatureDescription}}</text>
+        </view>
+      </view>
+      
+      <!-- 关系信息 -->
+      <view class="relationship-info">
+        <view class="info-item">
+          <text class="info-label">关系开始</text>
+          <text class="info-value">{{relationship.startDate}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">今日状态</text>
+          <text class="info-value status-{{relationship.status}}">
+            {{relationship.status === 1 ? '正常' : relationship.status === 2 ? '预警' : '断开'}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 今日打卡状态 -->
+    <view class="card checkin-card">
+      <view class="card-header">
+        <text class="card-title">今日打卡</text>
+        <text wx:if="{{!checkinToday}}" class="checkin-status not-checkin">未打卡</text>
+        <text wx:else class="checkin-status checked">已打卡</text>
+      </view>
+      
+      <view wx:if="{{checkinToday && todayCheckin}}" class="checkin-details">
+        <view class="checkin-item">
+          <text class="checkin-label">心情</text>
+          <text class="checkin-value mood-{{todayCheckin.mood}}">
+            {{moodEmoji}} {{moodDescription}}
+          </text>
+        </view>
+        <view class="checkin-item">
+          <text class="checkin-label">沟通</text>
+          <view class="stars">
+            <text wx:for="{{5}}" wx:key="index" class="star {{index < todayCheckin.communication ? 'filled' : 'empty'}}">★</text>
+          </view>
+        </view>
+        <view class="checkin-item">
+          <text class="checkin-label">亲密度</text>
+          <view class="stars">
+            <text wx:for="{{5}}" wx:key="index" class="star {{index < todayCheckin.intimacy ? 'filled' : 'empty'}}">★</text>
+          </view>
+        </view>
+        <view class="checkin-item">
+          <text class="checkin-label">冲突情况</text>
+          <text class="checkin-value conflict-{{todayCheckin.conflict}}">
+            {{todayCheckin.conflict === 1 ? '无冲突' : todayCheckin.conflict === 2 ? '轻微分歧' : todayCheckin.conflict === 3 ? '一般冲突' : todayCheckin.conflict === 4 ? '较大冲突' : '严重冲突'}}
+          </text>
+        </view>
+      </view>
+      
+      <view wx:else class="checkin-prompt">
+        <text>今天还未记录你们的关系状态哦～</text>
+        <button class="btn btn-primary" bindtap="goToCheckin">立即打卡</button>
+      </view>
+    </view>
+
+    <!-- 预警提示 -->
+    <view wx:if="{{warnings.length > 0}}" class="card warning-card">
+      <view class="card-header">
+        <text class="card-title">关系预警</text>
+        <text class="warning-count">{{warnings.length}}条</text>
+      </view>
+      
+      <view class="warning-list">
+        <view wx:for="{{warnings}}" wx:key="id" class="warning-item" bindtap="handleWarning" data-id="{{item.id}}">
+          <view class="warning-icon {{item.level}}">!</view>
+          <view class="warning-content">
+            <text class="warning-type">{{item.type}}</text>
+            <text class="warning-reason">{{item.reason}}</text>
+            <text class="warning-date">{{item.date}}</text>
+          </view>
+          <view class="warning-action">
+            <text class="action-text">处理</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="warning-footer">
+        <text bindtap="goToWarning">查看全部预警 →</text>
+      </view>
+    </view>
+
+    <!-- AI提醒 -->
+    <view class="card ai-reminder-card">
+      <view class="card-header">
+        <image class="ai-avatar" src="/images/ai-avatar.png"></image>
+        <text class="card-title">AI助手提醒</text>
+      </view>
+      
+      <view class="ai-content">
+        <text class="ai-text">{{aiReminder}}</text>
+      </view>
+      
+      <view class="ai-footer">
+        <text class="ai-action" bindtap="goToAIMediation">寻求AI帮助 →</text>
+      </view>
+    </view>
+
+    <!-- 待完成任务 -->
+    <view wx:if="{{pendingTasks.length > 0}}" class="card task-card">
+      <view class="card-header">
+        <text class="card-title">待完成任务</text>
+        <text class="task-count">{{pendingTasks.length}}个</text>
+      </view>
+      
+      <view class="task-list">
+        <view wx:for="{{pendingTasks}}" wx:key="id" class="task-item" bindtap="completeTask" data-id="{{item.id}}">
+          <view class="task-checkbox"></view>
+          <view class="task-content">
+            <text class="task-title">{{item.title}}</text>
+            <text class="task-desc">{{item.description}}</text>
+          </view>
+          <view class="task-action">
+            <text class="action-text">完成</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="task-footer">
+        <text bindtap="goToTask">查看全部任务 →</text>
+      </view>
+    </view>
+
+    <!-- 快捷入口 -->
+    <view class="quick-actions">
+      <view class="action-item" bindtap="goToCalendar">
+        <image class="action-icon" src="/images/icon-calendar.png"></image>
+        <text class="action-text">关系日历</text>
+      </view>
+      <view class="action-item" bindtap="goToCheckin">
+        <image class="action-icon" src="/images/icon-checkin.png"></image>
+        <text class="action-text">今日打卡</text>
+      </view>
+      <view class="action-item" bindtap="goToAIMediation">
+        <image class="action-icon" src="/images/icon-ai.png"></image>
+        <text class="action-text">AI调解</text>
+      </view>
+      <view class="action-item" bindtap="goToTask">
+        <image class="action-icon" src="/images/icon-task.png"></image>
+        <text class="action-text">修复任务</text>
+      </view>
+    </view>
+  </view>
+</view>

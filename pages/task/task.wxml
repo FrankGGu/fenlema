@@ -1,0 +1,261 @@
+<!--pages/task/task.wxml-->
+<view class="page-container">
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else class="main-content">
+    <!-- 任务统计 -->
+    <view class="stats-card">
+      <view class="stats-header">
+        <text class="stats-title">任务统计</text>
+        <text class="stats-completion">{{stats.completionRate}}% 完成率</text>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.total}}</text>
+          <text class="stat-label">总任务</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.pending}}</text>
+          <text class="stat-label">待完成</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.inProgress}}</text>
+          <text class="stat-label">进行中</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.completed}}</text>
+          <text class="stat-label">已完成</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 任务筛选 -->
+    <view class="filter-card">
+      <view class="filter-tabs">
+        <text 
+          class="filter-tab {{filter === 'all' ? 'active' : ''}}"
+          bindtap="filterTasks"
+          data-filter="all"
+        >全部</text>
+        <text 
+          class="filter-tab {{filter === 'pending' ? 'active' : ''}}"
+          bindtap="filterTasks"
+          data-filter="pending"
+        >待完成</text>
+        <text 
+          class="filter-tab {{filter === 'in_progress' ? 'active' : ''}}"
+          bindtap="filterTasks"
+          data-filter="in_progress"
+        >进行中</text>
+        <text 
+          class="filter-tab {{filter === 'completed' ? 'active' : ''}}"
+          bindtap="filterTasks"
+          data-filter="completed"
+        >已完成</text>
+      </view>
+    </view>
+
+    <!-- 任务列表 -->
+    <view class="tasks-card">
+      <view class="section-header">
+        <text class="section-title">我的任务</text>
+        <text class="task-count">{{getFilteredTasks().length}}个</text>
+      </view>
+      
+      <view class="tasks-list">
+        <view wx:if="{{getFilteredTasks().length === 0}}" class="no-tasks">
+          <text class="no-data-text">暂无任务</text>
+          <text class="no-data-hint">点击下方按钮创建新任务</text>
+        </view>
+        
+        <view wx:else class="task-items">
+          <view 
+            wx:for="{{getFilteredTasks()}}" 
+            wx:key="id"
+            class="task-item {{item.overdue ? 'overdue' : ''}}"
+            bindtap="viewTaskDetail"
+            data-id="{{item.id}}"
+          >
+            <view class="task-type" style="background-color: {{item.typeColor}};">
+              <text class="type-icon">{{item.typeIcon}}</text>
+            </view>
+            
+            <view class="task-content">
+              <view class="task-header">
+                <text class="task-title">{{item.title}}</text>
+                <text class="task-status status-{{item.status}}">
+                  {{item.status === 'pending' ? '待完成' : item.status === 'in_progress' ? '进行中' : '已完成'}}
+                </text>
+              </view>
+              
+              <text class="task-description">{{item.description}}</text>
+              
+              <view class="task-footer">
+                <text class="task-deadline">
+                  <text wx:if="{{item.deadline}}" class="deadline-text">
+                    截止：{{item.formattedDeadline}}
+                  </text>
+                  <text wx:else class="deadline-text">无期限</text>
+                </text>
+                
+                <view wx:if="{{item.overdue}}" class="overdue-badge">
+                  <text>已过期</text>
+                </view>
+              </view>
+            </view>
+            
+            <view class="task-actions">
+              <view wx:if="{{item.status === 'pending' && !item.overdue}}" class="action-buttons">
+                <button 
+                  class="btn-start" 
+                  bindtap="startTask"
+                  data-id="{{item.id}}"
+                  catchtap
+                >开始</button>
+                <button 
+                  class="btn-abandon" 
+                  bindtap="abandonTask"
+                  data-id="{{item.id}}"
+                  catchtap
+                >放弃</button>
+              </view>
+              
+              <view wx:if="{{item.status === 'in_progress'}}" class="action-buttons">
+                <button 
+                  class="btn-complete" 
+                  bindtap="completeTask"
+                  data-id="{{item.id}}"
+                  catchtap
+                >完成</button>
+              </view>
+              
+              <view wx:if="{{item.status === 'completed'}}" class="action-buttons">
+                <button 
+                  class="btn-share" 
+                  bindtap="shareTask"
+                  data-id="{{item.id}}"
+                  catchtap
+                >分享</button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 推荐任务 -->
+    <view wx:if="{{recommendedTasks.length > 0}}" class="recommended-card">
+      <view class="section-header">
+        <text class="section-title">AI推荐任务</text>
+        <text class="recommended-count">{{recommendedTasks.length}}个</text>
+      </view>
+      
+      <view class="recommended-list">
+        <view wx:for="{{recommendedTasks}}" wx:key="id" class="recommended-item">
+          <view class="recommended-header">
+            <text class="recommended-title">{{item.title}}</text>
+            <button 
+              class="btn-accept"
+              bindtap="acceptRecommendedTask"
+              data-id="{{item.id}}"
+            >接受</button>
+          </view>
+          
+          <text class="recommended-description">{{item.description}}</text>
+          
+          <view class="recommended-footer">
+            <text class="recommended-reason">推荐理由：{{item.reason}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn btn-primary" bindtap="showCreateTaskModal">
+        <text class="btn-icon">➕</text>
+        <text class="btn-text">创建新任务</text>
+      </button>
+      
+      <button class="btn btn-secondary" bindtap="exportTaskReport">
+        <text class="btn-icon">📊</text>
+        <text class="btn-text">导出报告</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 创建任务弹窗 -->
+  <view wx:if="{{showCreateModal}}" class="modal-overlay">
+    <view class="modal-container">
+      <view class="modal-header">
+        <text class="modal-title">创建新任务</text>
+        <text class="modal-close" bindtap="hideCreateTaskModal">×</text>
+      </view>
+      
+      <view class="modal-content">
+        <!-- 任务标题 -->
+        <view class="form-group">
+          <text class="form-label">任务标题</text>
+          <input 
+            class="form-input" 
+            placeholder="例如：认真倾听10分钟"
+            value="{{newTask.title}}"
+            bindinput="inputTaskTitle"
+            maxlength="50"
+          />
+        </view>
+        
+        <!-- 任务描述 -->
+        <view class="form-group">
+          <text class="form-label">任务描述</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="详细描述任务内容和要求..."
+            value="{{newTask.description}}"
+            bindinput="inputTaskDescription"
+            maxlength="200"
+            auto-height
+          ></textarea>
+        </view>
+        
+        <!-- 任务类型 -->
+        <view class="form-group">
+          <text class="form-label">任务类型</text>
+          <view class="type-options">
+            <view 
+              wx:for="{{taskTypes}}" 
+              wx:key="value"
+              class="type-option {{newTask.type === item.value ? 'selected' : ''}}"
+              bindtap="selectTaskType"
+              data-type="{{item.value}}"
+            >
+              <text class="type-icon">{{item.icon}}</text>
+              <text class="type-label">{{item.label}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 截止日期 -->
+        <view class="form-group">
+          <text class="form-label">截止日期（可选）</text>
+          <view class="deadline-selector" bindtap="selectDeadline">
+            <text wx:if="{{newTask.deadline}}" class="deadline-text">
+              {{formatDate(newTask.deadline, 'YYYY-MM-DD')}}
+            </text>
+            <text wx:else class="deadline-placeholder">选择截止日期</text>
+            <text class="deadline-icon">📅</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="btn btn-secondary" bindtap="hideCreateTaskModal">取消</button>
+        <button class="btn btn-primary" bindtap="createTask">创建</button>
+      </view>
+    </view>
+  </view>
+</view>

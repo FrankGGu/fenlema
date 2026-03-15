@@ -1,0 +1,653 @@
+/* pages/task/task.wxss */
+.page-container {
+  min-height: 100vh;
+  background-color: #FFF9F9;
+  padding-bottom: 40rpx;
+}
+
+/* 加载中 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200rpx;
+}
+
+.loading text {
+  font-size: 28rpx;
+  color: #999999;
+}
+
+/* 卡片通用样式 */
+.stats-card,
+.filter-card,
+.tasks-card,
+.recommended-card {
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  margin: 30rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 107, 139, 0.08);
+}
+
+/* 统计卡片 */
+.stats-card {
+  border-left: 8rpx solid #FF6B8B;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+}
+
+.stats-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.stats-completion {
+  font-size: 24rpx;
+  color: #6BFF8B;
+  background-color: rgba(107, 255, 139, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15rpx;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25rpx 15rpx;
+  background-color: #F8F8F8;
+  border-radius: 16rpx;
+}
+
+.stat-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FF6B8B;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #666666;
+}
+
+/* 筛选卡片 */
+.filter-card {
+  padding: 20rpx 30rpx;
+}
+
+.filter-tabs {
+  display: flex;
+  justify-content: space-between;
+  background-color: #F8F8F8;
+  border-radius: 50rpx;
+  padding: 6rpx;
+}
+
+.filter-tab {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 26rpx;
+  color: #666666;
+  border-radius: 50rpx;
+  transition: all 0.3s ease;
+}
+
+.filter-tab.active {
+  background-color: #FF6B8B;
+  color: white;
+  font-weight: 500;
+}
+
+/* 任务卡片 */
+.tasks-card {
+  border-left: 8rpx solid #6B8BFF;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #F0F0F0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.task-count {
+  font-size: 24rpx;
+  color: #FF6B8B;
+  background-color: #FFE8E8;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.tasks-list {
+  margin-top: 10rpx;
+}
+
+.no-tasks {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.no-data-text {
+  display: block;
+  font-size: 28rpx;
+  color: #999999;
+  margin-bottom: 15rpx;
+}
+
+.no-data-hint {
+  display: block;
+  font-size: 24rpx;
+  color: #CCCCCC;
+}
+
+.task-items {
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #F8F8F8;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item.overdue {
+  opacity: 0.8;
+}
+
+.task-type {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 25rpx;
+  flex-shrink: 0;
+}
+
+.type-icon {
+  font-size: 36rpx;
+}
+
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.task-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.task-status {
+  font-size: 22rpx;
+  padding: 6rpx 15rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: rgba(255, 184, 107, 0.1);
+  color: #FFB86B;
+}
+
+.status-in_progress {
+  background-color: rgba(107, 139, 255, 0.1);
+  color: #6B8BFF;
+}
+
+.status-completed {
+  background-color: rgba(107, 255, 139, 0.1);
+  color: #6BFF8B;
+}
+
+.task-description {
+  display: block;
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 15rpx;
+}
+
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deadline-text {
+  font-size: 22rpx;
+  color: #999999;
+}
+
+.overdue-badge {
+  font-size: 22rpx;
+  color: #FF6B6B;
+  background-color: rgba(255, 107, 107, 0.1);
+  padding: 6rpx 15rpx;
+  border-radius: 20rpx;
+}
+
+.task-actions {
+  margin-left: 20rpx;
+  flex-shrink: 0;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.action-buttons button {
+  padding: 12rpx 20rpx;
+  font-size: 22rpx;
+  border: none;
+  border-radius: 20rpx;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn-start {
+  background-color: #6B8BFF;
+  color: white;
+}
+
+.btn-start:active {
+  background-color: #5570FF;
+  transform: scale(0.95);
+}
+
+.btn-complete {
+  background-color: #6BFF8B;
+  color: white;
+}
+
+.btn-complete:active {
+  background-color: #50FF75;
+  transform: scale(0.95);
+}
+
+.btn-abandon {
+  background-color: #F0F0F0;
+  color: #666666;
+}
+
+.btn-abandon:active {
+  background-color: #E0E0E0;
+  transform: scale(0.95);
+}
+
+.btn-share {
+  background-color: #FFB86B;
+  color: white;
+}
+
+.btn-share:active {
+  background-color: #FFA850;
+  transform: scale(0.95);
+}
+
+/* 推荐任务卡片 */
+.recommended-card {
+  border-left: 8rpx solid #FFB86B;
+}
+
+.recommended-count {
+  font-size: 24rpx;
+  color: #FFB86B;
+  background-color: rgba(255, 184, 107, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.recommended-list {
+  margin-top: 10rpx;
+}
+
+.recommended-item {
+  padding: 25rpx;
+  background-color: #F8F8F8;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+}
+
+.recommended-item:last-child {
+  margin-bottom: 0;
+}
+
+.recommended-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.recommended-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.btn-accept {
+  padding: 10rpx 20rpx;
+  font-size: 22rpx;
+  background-color: #FF6B8B;
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  line-height: 1;
+}
+
+.btn-accept:active {
+  background-color: #FF5580;
+  transform: scale(0.95);
+}
+
+.recommended-description {
+  display: block;
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.5;
+  margin-bottom: 15rpx;
+}
+
+.recommended-footer {
+  padding-top: 15rpx;
+  border-top: 1rpx solid #F0F0F0;
+}
+
+.recommended-reason {
+  font-size: 22rpx;
+  color: #999999;
+  font-style: italic;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 30rpx;
+  gap: 20rpx;
+}
+
+.action-buttons .btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25rpx 0;
+  border-radius: 20rpx;
+  border: none;
+  font-size: 24rpx;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  background-color: #FF6B8B;
+  color: white;
+}
+
+.btn-primary:active {
+  background-color: #FF5580;
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background-color: #F0F0F0;
+  color: #666666;
+}
+
+.btn-secondary:active {
+  background-color: #E0E0E0;
+  transform: scale(0.98);
+}
+
+.btn-icon {
+  font-size: 40rpx;
+  margin-bottom: 10rpx;
+}
+
+.btn-text {
+  font-size: 24rpx;
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 30rpx;
+}
+
+.modal-container {
+  background-color: #FFFFFF;
+  border-radius: 30rpx;
+  width: 100%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 2rpx solid #F0F0F0;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333333;
+}
+
+.modal-close {
+  font-size: 50rpx;
+  color: #999999;
+  line-height: 1;
+}
+
+.modal-content {
+  flex: 1;
+  padding: 30rpx;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+  margin-bottom: 15rpx;
+}
+
+.form-input {
+  width: 100%;
+  padding: 25rpx;
+  background-color: #F8F8F8;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #333333;
+  border: 2rpx solid transparent;
+}
+
+.form-input:focus {
+  border-color: #FF6B8B;
+  background-color: #FFFFFF;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 200rpx;
+  padding: 25rpx;
+  background-color: #F8F8F8;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  color: #333333;
+  line-height: 1.5;
+  border: 2rpx solid transparent;
+}
+
+.form-textarea:focus {
+  border-color: #FF6B8B;
+  background-color: #FFFFFF;
+}
+
+.type-options {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15rpx;
+}
+
+.type-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 10rpx;
+  border: 2rpx solid #F0F0F0;
+  border-radius: 16rpx;
+  background-color: #FFFFFF;
+  transition: all 0.3s ease;
+}
+
+.type-option.selected {
+  border-color: #FF6B8B;
+  background-color: #FFE8E8;
+  transform: scale(1.05);
+}
+
+.type-icon {
+  font-size: 40rpx;
+  margin-bottom: 10rpx;
+}
+
+.type-label {
+  font-size: 22rpx;
+  color: #333333;
+}
+
+.type-option.selected .type-label {
+  color: #FF6B8B;
+  font-weight: 500;
+}
+
+.deadline-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25rpx;
+  background-color: #F8F8F8;
+  border-radius: 16rpx;
+  border: 2rpx solid transparent;
+}
+
+.deadline-selector:active {
+  border-color: #FF6B8B;
+  background-color: #FFFFFF;
+}
+
+.deadline-text,
+.deadline-placeholder {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.deadline-placeholder {
+  color: #999999;
+}
+
+.deadline-icon {
+  font-size: 36rpx;
+  color: #666666;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 25rpx 30rpx;
+  border-top: 2rpx solid #F0F0F0;
+  gap: 20rpx;
+}
+
+.modal-footer .btn {
+  flex: 1;
+  padding: 25rpx 0;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  border: none;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #F0F0F0;
+  color: #666666;
+}
+
+.modal-footer .btn-secondary:active {
+  background-color: #E0E0E0;
+  transform: scale(0.98);
+}
+
+.modal-footer .btn-primary {
+  background-color: #FF6B8B;
+  color: white;
+}
+
+.modal-footer .btn-primary:active {
+  background-color: #FF5580;
+  transform: scale(0.98);
+}

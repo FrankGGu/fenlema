@@ -1,0 +1,150 @@
+<!--pages/ai-mediation/ai-mediation.wxml-->
+<view class="page-container">
+  <!-- AI助手信息 -->
+  <view class="ai-header">
+    <image class="ai-avatar" src="{{aiAssistant.avatar}}"></image>
+    <view class="ai-info">
+      <text class="ai-name">{{aiAssistant.name}}</text>
+      <text class="ai-description">{{aiAssistant.description}}</text>
+    </view>
+  </view>
+
+  <!-- 对话容器 -->
+  <view class="conversation-container">
+    <!-- 对话列表 -->
+    <scroll-view class="message-list" scroll-y scroll-with-animation scroll-top="{{scrollTop}}">
+      <view wx:for="{{messages}}" wx:key="id" class="message-item {{item.type}}">
+        <!-- AI消息 -->
+        <view wx:if="{{item.type === 'ai'}}" class="message-bubble ai-bubble">
+          <view class="message-header">
+            <image class="sender-avatar" src="{{aiAssistant.avatar}}"></image>
+            <text class="sender-name">{{aiAssistant.name}}</text>
+            <text class="message-time">{{item.time}}</text>
+          </view>
+          <text class="message-content">{{item.content}}</text>
+          
+          <!-- 显示矛盾类型选择 -->
+          <view wx:if="{{item.showConflictTypes}}" class="conflict-types">
+            <text class="types-title">请选择最符合的类型：</text>
+            <view class="types-grid">
+              <view 
+                wx:for="{{conflictTypes}}" 
+                wx:key="id"
+                class="type-item {{item.selected ? 'selected' : ''}}"
+                bindtap="selectConflictType"
+                data-id="{{item.id}}"
+              >
+                <text class="type-icon">{{item.icon}}</text>
+                <text class="type-name">{{item.name}}</text>
+              </view>
+            </view>
+          </view>
+          
+          <!-- 显示任务 -->
+          <view wx:if="{{item.showTasks}}" class="task-suggestions">
+            <text class="tasks-title">修复任务建议：</text>
+            <view wx:for="{{item.tasks}}" wx:key="title" class="task-item">
+              <view class="task-header">
+                <text class="task-title">{{item.title}}</text>
+                <text class="task-duration">{{item.duration}}</text>
+              </view>
+              <text class="task-description">{{item.description}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 用户消息 -->
+        <view wx:else class="message-bubble user-bubble">
+          <view class="message-header">
+            <text class="message-time">{{item.time}}</text>
+            <text class="sender-name">我</text>
+            <image class="sender-avatar" src="/images/user-avatar.png"></image>
+          </view>
+          <text class="message-content">{{item.content}}</text>
+        </view>
+      </view>
+      
+      <!-- 处理中提示 -->
+      <view wx:if="{{processing}}" class="typing-indicator">
+        <text class="typing-text">{{aiAssistant.name}}正在思考...</text>
+        <view class="typing-dots">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 快速回复 -->
+    <view wx:if="{{conversationState === 'welcome' || conversationState === 'listening'}}" class="quick-replies">
+      <text class="replies-title">快速回复：</text>
+      <view class="replies-grid">
+        <view class="reply-item" bindtap="quickReply" data-text="我需要帮助">
+          <text>我需要帮助</text>
+        </view>
+        <view class="reply-item" bindtap="quickReply" data-text="最近沟通变少了">
+          <text>最近沟通变少了</text>
+        </view>
+        <view class="reply-item" bindtap="quickReply" data-text="我们经常吵架">
+          <text>我们经常吵架</text>
+        </view>
+        <view class="reply-item" bindtap="quickReply" data-text="感觉有些疏远">
+          <text>感觉有些疏远</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 输入区域 -->
+    <view class="input-area">
+      <input 
+        class="message-input" 
+        placeholder="输入你的感受或问题..." 
+        value="{{userInput}}"
+        bindinput="onInput"
+        bindconfirm="sendMessage"
+        confirm-type="send"
+        maxlength="500"
+      />
+      <button 
+        class="send-btn" 
+        bindtap="sendMessage"
+        disabled="{{!userInput.trim() || processing}}"
+      >
+        <text class="send-icon">发送</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button 
+      wx:if="{{mediationCompleted}}"
+      class="btn btn-primary" 
+      bindtap="acceptTasks"
+    >
+      <text class="btn-icon">✅</text>
+      <text class="btn-text">接受修复任务</text>
+    </button>
+    
+    <button 
+      class="btn btn-secondary" 
+      bindtap="restartConversation"
+    >
+      <text class="btn-icon">🔄</text>
+      <text class="btn-text">重新开始</text>
+    </button>
+    
+    <button 
+      class="btn btn-secondary" 
+      bindtap="saveConversation"
+    >
+      <text class="btn-icon">💾</text>
+      <text class="btn-text">保存对话</text>
+    </button>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="bottom-tip">
+    <text>💡 提示：AI助手不会评判对错，只提供温和的建议和工具。你的感受很重要。</text>
+  </view>
+</view>

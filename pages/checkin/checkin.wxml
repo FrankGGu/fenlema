@@ -1,0 +1,176 @@
+<!--pages/checkin/checkin.wxml-->
+<view class="page-container">
+  <!-- 顶部提示 -->
+  <view class="top-tip">
+    <text>记录今日关系状态，让爱持续升温</text>
+  </view>
+
+  <!-- 打卡表单 -->
+  <view class="checkin-form">
+    <!-- 心情 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">心情</text>
+        <text class="section-subtitle">你今天的心情如何？</text>
+      </view>
+      <view class="mood-options">
+        <view 
+          wx:for="{{moodOptions}}" 
+          wx:key="value"
+          class="mood-option {{item.selected ? 'selected' : ''}}"
+          bindtap="selectMood"
+          data-value="{{item.value}}"
+        >
+          <text class="mood-emoji">{{item.emoji}}</text>
+          <text class="mood-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 沟通状态 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">沟通状态</text>
+        <text class="section-subtitle">今天的沟通充分吗？</text>
+      </view>
+      <view class="rating-options">
+        <view 
+          wx:for="{{communicationOptions}}" 
+          wx:key="value"
+          class="rating-option {{item.selected ? 'selected' : ''}}"
+          bindtap="selectCommunication"
+          data-value="{{item.value}}"
+        >
+          <text class="rating-value">{{item.value}}</text>
+          <text class="rating-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 亲密度 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">亲密度</text>
+        <text class="section-subtitle">今天感觉亲近吗？</text>
+      </view>
+      <view class="rating-options">
+        <view 
+          wx:for="{{intimacyOptions}}" 
+          wx:key="value"
+          class="rating-option {{item.selected ? 'selected' : ''}}"
+          bindtap="selectIntimacy"
+          data-value="{{item.value}}"
+        >
+          <text class="rating-value">{{item.value}}</text>
+          <text class="rating-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 冲突情况 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">冲突情况</text>
+        <text class="section-subtitle">今天有发生冲突吗？</text>
+      </view>
+      <view class="conflict-options">
+        <view 
+          wx:for="{{conflictOptions}}" 
+          wx:key="value"
+          class="conflict-option {{item.selected ? 'selected' : ''}}"
+          bindtap="selectConflict"
+          data-value="{{item.value}}"
+        >
+          <text class="conflict-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-title">备注（可选）</text>
+        <text class="section-subtitle">想记录什么特别的事情吗？</text>
+      </view>
+      <textarea 
+        class="note-input" 
+        placeholder="写下今天关于你们的小故事..."
+        value="{{checkinData.note}}"
+        bindinput="inputNote"
+        maxlength="200"
+        auto-height
+      ></textarea>
+      <view class="note-count">
+        <text>{{checkinData.note.length}}/200</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 伴侣打卡状态 -->
+  <view wx:if="{{partnerCheckin}}" class="partner-section">
+    <view class="section-header">
+      <text class="section-title">伴侣今日打卡</text>
+      <text class="section-time">{{partnerCheckin.time}}</text>
+    </view>
+    <view class="partner-status">
+      <view class="status-item">
+        <text class="status-label">心情</text>
+        <text class="status-value mood-{{partnerCheckin.mood}}">
+          {{getMoodEmoji(partnerCheckin.mood)}} {{getMoodDescription(partnerCheckin.mood)}}
+        </text>
+      </view>
+      <view class="status-item">
+        <text class="status-label">沟通</text>
+        <view class="stars">
+          <text wx:for="{{5}}" wx:key="index" class="star {{index < partnerCheckin.communication ? 'filled' : 'empty'}}">★</text>
+        </view>
+      </view>
+      <view class="status-item">
+        <text class="status-label">亲密度</text>
+        <view class="stars">
+          <text wx:for="{{5}}" wx:key="index" class="star {{index < partnerCheckin.intimacy ? 'filled' : 'empty'}}">★</text>
+        </view>
+      </view>
+      <view class="status-item">
+        <text class="status-label">冲突</text>
+        <text class="status-value conflict-{{partnerCheckin.conflict}}">
+          {{partnerCheckin.conflict === 1 ? '无冲突' : partnerCheckin.conflict === 2 ? '轻微分歧' : partnerCheckin.conflict === 3 ? '一般冲突' : partnerCheckin.conflict === 4 ? '较大冲突' : '严重冲突'}}
+        </text>
+      </view>
+      <view wx:if="{{partnerCheckin.note}}" class="status-item note-item">
+        <text class="status-label">备注</text>
+        <text class="status-note">{{partnerCheckin.note}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button 
+      class="btn btn-secondary" 
+      bindtap="skipCheckin"
+      wx:if="{{!alreadyCheckedIn}}"
+    >
+      跳过
+    </button>
+    <button 
+      class="btn btn-primary" 
+      bindtap="submitCheckin"
+      loading="{{submitting}}"
+      disabled="{{submitting}}"
+    >
+      {{alreadyCheckedIn ? '更新打卡' : '提交打卡'}}
+    </button>
+    <button 
+      class="btn btn-secondary" 
+      bindtap="getSuggestion"
+    >
+      获取建议
+    </button>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="bottom-tip">
+    <text>每日打卡有助于增进了解，及时发现关系中的小问题</text>
+  </view>
+</view>

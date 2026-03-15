@@ -1,0 +1,7 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "关系日历",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#FFF9F9",
+  "backgroundTextStyle": "dark"
+}
